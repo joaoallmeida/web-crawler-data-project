@@ -18,28 +18,19 @@ class AmazonSpider(scrapy.Spider):
     def parse_product_details(self, response):
 
         title = response.css('h1::text').get()
-        # raw_data = list()
+        raw_data = list()
 
         for detail in response.css('div#gridItemRoot'):
-            yield {
-                "title": title,
+            raw_data.append({
                 "rank": detail.css('span.zg-bdg-text::text').get(),
                 "product": detail.css('div::text').get(),
                 "rating_stars": detail.css('span.a-icon-alt::text').get(),
                 "rating": detail.css('span.a-size-small::text').get(),
                 "price": str(detail.css('span::text').getall()[-1]).replace('\xa0','')
-            }
+            })
 
-        #     raw_data.append({
-        #         "rank": detail.css('span.zg-bdg-text::text').get(),
-        #         "product": detail.css('div::text').get(),
-        #         "rating_stars": detail.css('span.a-icon-alt::text').get(),
-        #         "rating": detail.css('span.a-size-small::text').get(),
-        #         "price": str(detail.css('span::text').getall()[-1]).replace('\xa0','')
-        #     })
-
-        # final_data = {
-        #     title: raw_data
-        # }
+        final_data = {
+            title: raw_data
+        }
         
-        # yield from final_data
+        return final_data
