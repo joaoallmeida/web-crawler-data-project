@@ -1,5 +1,6 @@
 import scrapy
-from urllib.parse import urljoin
+from ..items import AmazonCrawlerItem
+from urllib.parse import unquote
 
 class AmazonSpider(scrapy.Spider):
     name='amazon'
@@ -15,27 +16,28 @@ class AmazonSpider(scrapy.Spider):
             yield response.follow(tab, self.parse_department)
 
     def parse_department(self, response):
-        for link in response.xpath("//div[@role='group']/div/a"):
-            product_page = link.css('a::attr(href)').get()
-            if product_page is not None:
-                yield response.follow(product_page, self.parse_product_details)
+        for product_page in response.xpath("//div[@role='group']/div/a"):
+            yield response.follow(product_page, self.parse_product_details)
     
     def parse_product_details(self, response):
         
         h1 = response.css('h1::text').get()
-        depatment = h1.split('em ')[-1]
-        type = h1.split(' em')[0]
+        last_index = h1.rfind('em')
+        types,department = [h1[:last_index].strip(), h1[last_index:].strip('em ')]
 
-        for detail in response.css('div#gridItemRoot'):
-            yield {
-                "type": type,
-                "department": depatment,
-                "rank": detail.css('span.zg-bdg-text::text').get(),
-                "product": detail.css('div::text').get(),
-                "rating_stars": detail.css('span.a-icon-alt::text').get(),
-                "ratings": detail.css('span.a-size-small::text').get(),
-                "price": str(detail.css('span::text').getall()[-1]).replace('\xa0','')
-            }
+        for detail in response.xpath("//div[@id='gridItemRoot']"):
+            item = AmazonCrawlerItem()
+
+            item['type'] = types
+            item['department'] = department
+            item['rank'] = detail.css('span.zg-bdg-text::text').get()
+            item['product'] = detail.css('div::text').get()
+            item['stars'] = detail.css('span.a-icon-alt::text').get()
+            item['ratings'] = detail.css('span.a-size-small::text').get()
+            item['price'] = str(detail.css('span::text').getall()[-1]).replace('\xa0','')
+            item['link'] = unquote(response.urljoin(detail.css('a::attr(href)').get()))
+
+            yield item
 
         next_page = response.css('.a-last a::attr(href)').get()
         if next_page is not None:

@@ -4,9 +4,18 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from scrapy.item import Item,Field
 
-
-class AmazonCrawlerItem(scrapy.Item):
+class AmazonCrawlerItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    type = Field()
+    department = Field()
+    rank = Field()
+    product = Field()
+    stars = Field()
+    ratings = Field()
+    price = Field()
+    link = Field()
+
+

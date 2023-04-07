@@ -6,8 +6,18 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
+import json
 
+class AmazonCrawlerPipelineJsonFile:
+    def open_spider(self, spider):
+        self.data = list()
+        self.file = open('raw_data.json','w',encoding='utf-8')
+    
+    def close_spider(self, spider):
+        line = json.dumps(self.data, ensure_ascii=False)
+        self.file.write(line)
+        self.file.close()
 
-class AmazonCrawlerPipeline:
     def process_item(self, item, spider):
+        self.data.append((ItemAdapter(item).asdict()))
         return item
