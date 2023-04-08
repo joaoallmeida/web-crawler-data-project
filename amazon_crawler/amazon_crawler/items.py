@@ -12,10 +12,14 @@ class AmazonCrawlerItem(Item):
     type = Field()
     department = Field()
     rank = Field()
+    brand = Field()
     product = Field()
     stars = Field()
     ratings = Field()
     price = Field()
     link = Field()
+    img = Field()
+    asin = Field()
+    producer = Field()
 
 
