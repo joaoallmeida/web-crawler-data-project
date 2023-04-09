@@ -21,5 +21,6 @@ class AmazonCrawlerItem(Item):
     img = Field()
     asin = Field()
     producer = Field()
+    extract_at = Field(serializer=str)
 
 
