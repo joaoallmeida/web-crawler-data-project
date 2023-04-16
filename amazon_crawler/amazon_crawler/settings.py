@@ -14,8 +14,9 @@ NEWSPIDER_MODULE = "amazon_crawler.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "amazon_crawler (+http://www.yourdomain.com)"
-# USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.34"
+# USER_AGENT = "amazon_crawler (+http://www.yourdomain.com)"
+# USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.48"
+# USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
 
 
 # Obey robots.txt rules
@@ -39,9 +40,17 @@ ROBOTSTXT_OBEY = True
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
+
 # DEFAULT_REQUEST_HEADERS = {
-#    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#    "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+#         ":authority": "www.amazon.com.br",
+#         "Accept": "*/*",
+#         "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+#         "Accept-Encoding": "gzip, deflate, br",
+#         "Connection": "keep-alive",
+#         "Upgrade-Insecure-Requests": "1",
+#         "Sec-Fetch-Dest": "empty",
+#         "Sec-Fetch-Mode": "cors",
+#         "Sec-Fetch-Site": "same-origin"
 # }
 
 #DEFAULT_REQUEST_HEADERS = {
@@ -70,7 +79,8 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   "amazon_crawler.pipelines.AmazonCrawlerPipelineJsonFile": 300,
+   "amazon_crawler.pipelines.MongoPipeline": 500,
+   "amazon_crawler.pipelines.AmazonCrawlerPipelineJsonFile": 800
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -99,5 +109,14 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
-RETRY_ENABLED = True
-RETRY_TIMES = 5
+# RETRY_ENABLED = True
+# RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408]
+# RETRY_TIMES = 5
+
+## Update The Download Middlewares
+# DOWNLOADER_MIDDLEWARES = { 
+# 'scrapy.downloadermiddlewares.retry.RetryMiddleware': 503, 
+# }
+
+MONGO_URI = 'mongodb+srv://<URI ATLAS>'
+MONGO_DATABASE= 'scrapy'
