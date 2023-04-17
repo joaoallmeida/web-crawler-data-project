@@ -9,18 +9,14 @@ from scrapy.item import Item,Field
 class AmazonCrawlerItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    asin = Field()
     type = Field()
     department = Field()
     rank = Field()
-    brand = Field()
     product = Field()
     stars = Field()
     ratings = Field()
     price = Field()
     link = Field()
     img = Field()
-    asin = Field()
-    producer = Field()
     extract_at = Field(serializer=str)
-
-

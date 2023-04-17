@@ -43,15 +43,6 @@ class AmazonSpider(scrapy.Spider):
 
             yield item
             
-            # page = detail.css('a::attr(href)').get()
-            # if page is not None:
-            #     yield scrapy.Request(response.urljoin(page), callback=self.parse_asin, cb_kwargs={"item": item})
-
-
         next_page = response.css('.a-last a::attr(href)').get()
         if next_page is not None:
            yield response.follow(next_page, callback=self.parse_details)
-    
-    # def parse_asin(self, response, item):
-    #     item['asin'] = response.xpath('//*[@data-asin]/@data-asin').get()
-    #     yield item
