@@ -79,8 +79,9 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   "amazon_crawler.pipelines.MongoPipeline": 500,
-   "amazon_crawler.pipelines.AmazonCrawlerPipelineJsonFile": 800
+   # "amazon_crawler.pipelines.MongoPipeline": 500,
+   # "amazon_crawler.pipelines.JsonFilePipeline": 800,
+   "amazon_crawler.pipelines.S3Pipeline": 300
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -109,14 +110,10 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
-# RETRY_ENABLED = True
-# RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408]
-# RETRY_TIMES = 5
-
-## Update The Download Middlewares
-# DOWNLOADER_MIDDLEWARES = { 
-# 'scrapy.downloadermiddlewares.retry.RetryMiddleware': 503, 
-# }
-
-MONGO_URI = 'mongodb+srv://<URI ATLAS>'
+MONGO_URI = 'mongodb+srv://crawlerUser:MKJp9BZ64AgdQnYw@crawler-cluster.i6t46rc.mongodb.net'
 MONGO_DATABASE= 'scrapy'
+
+AWS_REGION = 'us-east-1'
+S3_BUCKET = 'webscraping.com.br'
+
+FEED_FORMAT = 'jsonlines'

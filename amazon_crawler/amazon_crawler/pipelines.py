@@ -6,10 +6,10 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-import pymongo
-import json
+from datetime import datetime
+import pymongo ,json ,boto3
 
-class AmazonCrawlerPipelineJsonFile:
+class JsonFilePipeline:
     def open_spider(self, spider):
         # self.data = list()
         self.file = open('raw_data.json','w',encoding='utf-8')
@@ -49,4 +49,30 @@ class MongoPipeline:
 
     def process_item(self, item, spider):
         self.db[self.collection_name].insert_one(ItemAdapter(item).asdict())
+        return item
+
+class S3Pipeline:
+    
+    def __init__(self, region_name, s3_bucket):
+        self.s3_bucket = s3_bucket
+        self.awsSession = boto3.Session(region_name=region_name)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            region_name=crawler.settings.get('AWS_REGION'),
+            s3_bucket=crawler.settings.get('S3_BUCKET')
+        )
+
+    def open_spider(self, spider):
+        self.data = list()
+        self.s3_client = self.awsSession.client('s3')
+
+    def close_spider(self, spider):
+        dt_ref = datetime.now().strftime("%Y%m%d")    
+        item_bytes = str(json.dumps(self.data,ensure_ascii=False)).encode('utf-8')
+        self.s3_client.put_object(Bucket=self.s3_bucket, Key=f'scraping/raw/amazon_products_{dt_ref}.json', Body=item_bytes)
+
+    def process_item(self, item, spider):
+        self.data.append((ItemAdapter(item).asdict()))
         return item
