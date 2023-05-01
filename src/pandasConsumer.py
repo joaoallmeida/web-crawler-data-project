@@ -9,7 +9,7 @@ dt_ref = datetime.now().strftime("%Y%m%d")
 df = wr.s3.read_json(f's3://webscraping.com.br/scraping/raw/amazon_products_{dt_ref}.json',boto3_session=awsSession)
 
 workDf = df.copy()
-workDf = workDf.rename({'_id':'id'}, axis=1)
+# workDf = workDf.rename({'_id':'id'}, axis=1)
 workDf['price'] = workDf['price'].replace(r'[^0-9,]', '', regex=True).replace('',np.NaN).str.replace(',','.')
 workDf['ratings'] = workDf['ratings'].replace(r"[a-zA-Z]+", np.NaN, regex=True)
 workDf['stars'] = workDf['stars'].fillna('N/D')

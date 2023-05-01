@@ -117,3 +117,5 @@ AWS_REGION = 'us-east-1'
 S3_BUCKET = 'webscraping.com.br'
 
 FEED_FORMAT = 'jsonlines'
+
+RETRY_TIMES = 20
